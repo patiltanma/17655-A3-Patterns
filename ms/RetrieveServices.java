@@ -223,5 +223,80 @@ public class RetrieveServices extends UnicastRemoteObject implements RetrieveSer
         return(ReturnString);
 
     } //retrieve order by id
+    
+    // This method will returns the user information in the orderinfo database corresponding to the id
+    // provided in the argument.
+
+    public String retrieveUserInfo(String username) throws RemoteException
+    {
+      	// Local declarations
+
+        Connection conn = null;		// connection to the orderinfo database
+        Statement stmt = null;		// A Statement object is an interface that represents a SQL statement.
+        String ReturnString = "[";	// Return string. If everything works you get an ordered pair of data
+        							// if not you get an error string
+
+        try
+        {
+            // Here we load and initialize the JDBC connector. Essentially a static class
+            // that is used to provide access to the database from inside this class.
+
+            Class.forName(JDBC_CONNECTOR);
+
+            //Open the connection to the orderinfo database
+
+            //System.out.println("Connecting to database...");
+            conn = DriverManager.getConnection(DB_URL,USER,PASS);
+
+            // Here we create the queery Execute a query. Not that the Statement class is part
+            // of the Java.rmi.* package that enables you to submit SQL queries to the database
+            // that we are connected to (via JDBC in this case).
+
+             //System.out.println("Creating statement...");
+            stmt = conn.createStatement();
+            
+            String sql;
+		  sql = "SELECT * FROM Users where username='" + username + "'";
+            ResultSet rs = stmt.executeQuery(sql);
+
+
+		  
+		   //System.out.println("SQL Request made...");
+
+            // Extract data from result set. Note there should only be one for this method.
+            // I used a while loop should there every be a case where there might be multiple
+            // orders for a single ID.
+
+            while(rs.next())
+            {
+                //Retrieve by column name
+                String buffer = rs.getString("username");
+                String password = rs.getString("password");
+
+
+                ReturnString = ReturnString +"{username:"+username+", password:"+password+"}";
+            }
+
+            ReturnString = ReturnString +"]";
+
+            //Clean-up environment
+
+            rs.close();
+            stmt.close();
+            conn.close();
+            stmt.close(); 
+            conn.close();
+
+        } catch(Exception e) {
+
+            ReturnString = e.toString();
+		  
+
+        } 
+
+	   System.out.println(ReturnString);
+        return(ReturnString);
+
+    } //retrieve order by id
 
 } // RetrieveServices

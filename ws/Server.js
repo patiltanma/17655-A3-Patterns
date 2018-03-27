@@ -39,7 +39,7 @@ function REST(){
 
 // Here we connect to the database. Of course you will put your own user and password information 
 // in the "user" and "password" variables. Note that we also create a connection pool.
-// Note that I hardwared the server to the ws_orderinfo name. You will have to provide your own
+// Note that I hardwired the server to the ws_orderinfo name. You will have to provide your own
 // password... you will probably use the same user. If not, you will have to change that as well.
 
 REST.prototype.connectMysql = function() {

@@ -32,5 +32,12 @@ public interface CreateServicesAI extends java.rmi.Remote
 	*******************************************************/
 
 	String newOrder(String Date, String FirstName, String LastName, String Address, String Phone) throws RemoteException;
+	
+	
+	/*******************************************************
+	* Creates a new entry in the database for new user registered.
+	*******************************************************/
+	
+	String addUserInfo(String username, String password) throws RemoteException;
 
 }

@@ -26,11 +26,14 @@ import java.io.Console;
 
 public class OrdersUI
 {
+	static private WSClientAPI api = new WSClientAPI();	// RESTful api object
+	
+			
 	public static void main(String args[])
 	{
 		boolean done = false;						// main loop flag
 		boolean error = false;						// error flag
-		char    option;								// Menu choice from user
+										// Menu choice from user
 		Console c = System.console();				// Press any key
 		String  date = null;						// order date
 		String  first = null;						// customer first name
@@ -42,7 +45,28 @@ public class OrdersUI
 		Scanner keyboard = new Scanner(System.in);	// keyboard scanner object for user input
 		DateTimeFormatter dtf = null;				// Date object formatter
 		LocalDate localDate = null;					// Date object
-		WSClientAPI api = new WSClientAPI();	// RESTful api object
+		char    option;
+
+		
+		/////////////////////////////////////////////////////////////////////////////////
+		// User Login
+		/////////////////////////////////////////////////////////////////////////////////
+		
+		System.out.println( "\n\n\n\n" );
+		System.out.println( "User Authentication\n" );
+		if(AuthenticateUser()==false)
+		{
+			// inform the user that the authentication failed and exit the program
+			
+			System.out.println( "\nUser Authentication failed.\n" );
+			return;
+		} else {
+			
+			// inform the user that the authentication was successful
+			
+			System.out.println( "\nUser Authenticated Successfully." );
+			System.out.println( "Please try again by restarting the application!\n" );
+		}	
 
 		/////////////////////////////////////////////////////////////////////////////////
 		// Main UI loop
@@ -288,5 +312,172 @@ public class OrdersUI
 		} // while
 
   	} // main
+	
+		
+	/********************************************************************************
+	* Description: Gets the username from the user. Checks if available in database.
+	*			Adds username and password if not existing. Checks if username and
+	*			password match.
+	* Parameters: None
+	* Returns: tells if authentication passed of failes.
+	********************************************************************************/
+	
+	static private boolean AuthenticateUser() 
+	{
+		String username = null;				// user name for authorization
+		String password = null;				// password for authorization
+		String response = null;				// general response from server
+		char    option;
+		boolean done = false;				// loop flag
+		Scanner keyboard = new Scanner(System.in);	// keyboard scanner object for user input
+		
+		// ask the user to input the username
+		
+		System.out.println( "Please enter your user-name:\n" );
+		username = keyboard.next();	
+			
+		// check if username is in the database
+			
+		System.out.println( "\nChecking database for user-name..." );
+		if(isUsernamePresent(username)==false) 
+		{
+						
+			System.out.println("\nUser-name is not in the database.");
+			System.out.println("You will have to register to access all the services.");
+			System.out.println("Registration will require a user-name and a password.");
+			System.out.println( "\n" );
+			System.out.print("If you think you have already registered and have made a mistake in typing the username, ");
+			System.out.println("Press anything on the keyboard except 'y' to exit, so that you can restart the program.");
+			System.out.println( "\n" );
+			System.out.println("Do you want to proceed with the registration?");
+			System.out.println("Press 'y' to register and type anything else to close this application.");
 
+			// is username is not present in the database, ask the user if they want to register.
+			// user can access database only if they register
+			
+			option = keyboard.next().charAt(0);
+
+			if (( option == 'y') || (option == 'Y'))
+			{
+				// if user says yes then keep checking till the user enters a unique username not available in 
+				// the database for him/her to register.
+				
+				while(!done)
+				{
+					System.out.println( "\nPlease enter your user-name:" );
+					username = keyboard.next();
+					
+										
+					if(isUsernamePresent(username)==true) 
+					{
+						System.out.println( "This username already exists. Please try a new one.\n" );
+						done = false;
+					} else {
+						
+						// if the username is unique ask for the password for registration
+						
+						System.out.println( "\nPlease enter your password:" );
+						password = keyboard.next();
+						
+						// add the username and password to the database
+												
+						try
+						{
+							System.out.println("\nAdding your username...");
+							response = api.addUserInfo(username, password);
+							done = true;
+
+						} catch(Exception e) {
+
+							System.out.println("Request failed:: " + e);
+							System.out.println("\nSome error occurred. Please try again.\n");
+							return false;
+
+						}
+					}
+				}
+				
+				return true;
+			}
+			else {
+				
+				// if user says anthing except 'y' inform main about it so that program terminates
+				System.out.println( "You choose to exit." );
+				return false;
+			}
+
+		} else {
+			
+			// if username is found in the database ask the user to enter the password
+			
+			System.out.println( "Please enter your password:\n" );
+			password = keyboard.next();
+			
+			// retrieve password for the username from the database
+			
+			try
+			{
+				System.out.println("\nChecking username and password...");
+				response = api.retrieveUserInfo(username);
+				done = true;
+				
+			} catch(Exception e) {
+
+				System.out.println("Request failed:: " + e);
+				System.out.println("\n\nSome error occurred. Please try again.\n");
+				return false;
+
+			}
+			
+			// check if the password is correct
+			
+			if(response.contains("\"password\":\""+password+"\"")) 
+			{
+				return true;
+				
+			} else {
+
+				System.out.println("Username and password didnot match.");
+				return false;
+
+			}
+		}
+	}
+	
+	
+	/********************************************************************************
+	* Description: Checks if username is present in the database.
+	* Parameters: username as string
+	* Returns: tells if username is present or absent.
+	********************************************************************************/
+	
+	static private boolean isUsernamePresent(String username)
+	{
+		String response = null;				// general response from server
+		
+		// get the username from the database
+		try
+		{
+
+			response = api.retrieveUserInfo(username);					
+
+		} catch (Exception e) {
+
+			System.out.println("Request failed:: " + e);
+			return false;
+					
+		}
+				
+		// check the response and inform the calling method about it			
+		if(response.contains("\"Users\":[]"))
+		{
+			return false;
+					
+		} else {
+			
+			return true;
+		}
+					
+	}
+	
 } // OrdersUI

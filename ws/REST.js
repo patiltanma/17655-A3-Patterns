@@ -46,6 +46,49 @@ REST_ROUTER.prototype.handleRoutes= function(router,connection) {
         res.json({"Message":"Orders Webservices Server Version 1.0"});
     });
     
+    
+   // GET for /users/username specifier - returns the user information
+    // req parameter is the request object
+    // res parameter is the response object
+     
+    router.get("/users/:username",function(req,res){
+        console.log("Getting username: ", req.params.username );
+        var query = "SELECT * FROM ?? WHERE ??=?";
+        var table = ["users","username",req.params.username];
+        query = mysql.format(query,table);
+        connection.query(query,function(err,rows){
+            if(err) {
+                res.json({"Error" : true, "Message" : "Error executing MySQL query"});
+            } else {
+                res.json({"Error" : false, "Message" : "Success", "Users" : rows});
+            }
+        });
+    });
+    
+    
+    // POST for /users?username&password - adds users
+    // req parameter is the request object - note to get parameters (eg. stuff after the '?') you must use req.body.param
+    // res parameter is the response object 
+  
+    router.post("/users",function(req,res){
+        //console.log("url:", req.url);
+        //console.log("body:", req.body);
+        console.log("Adding to users table ", req.body.username,",",req.body.password);
+        var query = "INSERT INTO ??(??,??) VALUES (?,?)";
+        var table = ["users","username","password",req.body.username,req.body.password];
+        query = mysql.format(query,table);
+        connection.query(query,function(err,rows){
+            if(err) {
+                res.json({"Error" : true, "Message" : "Error executing MySQL query"});
+            } else {
+                res.json({"Error" : false, "Message" : "User Added !"});
+            }
+        });
+    });
+    
+    
+    
+    
     // GET for /orders specifier - returns all orders currently stored in the database
     // req parameter is the request object
     // res parameter is the response object
