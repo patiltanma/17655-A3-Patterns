@@ -1,5 +1,5 @@
 /******************************************************************************************************************
-* File: CreateServicesAI.java
+* File: UserLoginServicesAI.java
 * Course: 17655
 * Project: Assignment A3
 * Copyright: Copyright (c) 2018 Carnegie Mellon University
@@ -17,20 +17,31 @@
 * Parameters: None
 *
 * Internal Methods:
-*  String newOrder() - creates a new order in the orderinfo database
+*  String addUserInfo(String username, String password) - adds a new user information like username and password to the database
+*  String retrieveUserInfo(String username) - gets and returns the user information
 *
 * External Dependencies: None
 ******************************************************************************************************************/
 
 import java.rmi.*;
 		
-public interface CreateServicesAI extends java.rmi.Remote
+public interface UserLoginServicesAI extends java.rmi.Remote
 {
-	/*******************************************************
-	* Creates a new order from the provided arguments.
-	* Returns an OK message or an error string.
-	*******************************************************/
 
-	String newOrder(String Date, String FirstName, String LastName, String Address, String Phone) throws RemoteException;
+	/*******************************************************
+	* Creates a new entry in the database for new user registered
+	* with the username and password.
+	*******************************************************/
 	
+	String addUserInfo(String username, String password) throws RemoteException;
+	
+	/*******************************************************
+	* Retrieves the user info corresponding to the username in 
+	* method argument form the orderinfo database and 
+	* returns the userinfo in the form of a string in ordered 
+	* pairs format.
+	*******************************************************/	
+
+	String retrieveUserInfo(String username) throws RemoteException;
+
 }

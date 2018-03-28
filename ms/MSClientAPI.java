@@ -39,8 +39,9 @@ public class MSClientAPI
 
 	public String retrieveUserInfo(String username) throws Exception
 	{
-           RetrieveServicesAI obj = (RetrieveServicesAI) Naming.lookup("RetrieveServices");  
+           UserLoginServicesAI obj = (UserLoginServicesAI) Naming.lookup("UserLoginServices");  
            response = obj.retrieveUserInfo(username);
+		 logData(response);
            return(response);
 	}
 	
@@ -53,8 +54,9 @@ public class MSClientAPI
 
    	public String addUserInfo(String username, String password) throws Exception
 	{
-           CreateServicesAI obj = (CreateServicesAI) Naming.lookup("CreateServices"); 
+           UserLoginServicesAI obj = (UserLoginServicesAI) Naming.lookup("UserLoginServices"); 
            response = obj.addUserInfo(username, password);
+		 logData(response);
            return(response);	
 		
     }
@@ -72,6 +74,7 @@ public class MSClientAPI
 	{
            RetrieveServicesAI obj = (RetrieveServicesAI) Naming.lookup("RetrieveServices");  
            response = obj.retrieveOrders();
+		 logData(response);
            return(response);
 	}
 	
@@ -88,6 +91,7 @@ public class MSClientAPI
 	{
            RetrieveServicesAI obj = (RetrieveServicesAI) Naming.lookup("RetrieveServices");  
            response = obj.retrieveOrders(id);
+		 logData(response);
            return(response);	
 
 	}
@@ -102,6 +106,7 @@ public class MSClientAPI
 	{
            CreateServicesAI obj = (CreateServicesAI) Naming.lookup("CreateServices"); 
            response = obj.newOrder(Date, FirstName, LastName, Address, Phone);
+		 logData(response);
            return(response);	
 		
     }
@@ -116,8 +121,25 @@ public class MSClientAPI
 	{
            DeleteServicesAI obj = (DeleteServicesAI) Naming.lookup("DeleteServices"); 
            response = obj.deleteOrder(orderid);
+		 logData(response);
            return(response);	
 		
+    }
+    
+    /********************************************************************************
+	* Description: Logs the data it receives while transacting
+	* Parameters: None
+	* Returns: String that contains the status of the delete operation
+	********************************************************************************/
+
+   	public void logData(String data) throws Exception
+	{
+		try {
+			 LoggingServicesAI obj = (LoggingServicesAI) Naming.lookup("LoggingServices"); 
+			 obj.LogData(data);
+		} catch (Exception e) {
+			
+		}
     }
     
     

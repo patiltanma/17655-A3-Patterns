@@ -44,12 +44,4 @@ public interface RetrieveServicesAI extends java.rmi.Remote
 
 	String retrieveOrders(String id ) throws RemoteException;
 	
-	/*******************************************************
-	* Retrieves the user info corresponding to the username in 
-	* method argument form the orderinfo database and 
-	* returns the userinfo in the form of a string in ordered 
-	* pairs format.
-	*******************************************************/	
-
-	String retrieveUserInfo(String username) throws RemoteException;
 }

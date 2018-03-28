@@ -17,6 +17,8 @@
 *	- MSlientAPI - this class provides an interface to a set of microservices
 *	- RetrieveServices - this is the server-side micro service for retrieving info from the ms_orders database
 *	- CreateServices - this is the server-side micro service for creating new orders in the ms_orders database
+*	- DeleteServices - this is the server-side micro service for creating new orders in the ms_orders database
+*	- LoggingServices - this is the server-side micro service for creating new orders in the ms_orders database
 *
 ******************************************************************************************************************/
 
@@ -51,20 +53,20 @@ public class OrdersUI
 		// User Login
 		/////////////////////////////////////////////////////////////////////////////////
 		
-		System.out.println( "\n\n\n\n" );
+		System.out.println( "\n\n" );
 		System.out.println( "User Authentication\n" );
 		if(AuthenticateUser()==false)
 		{
 			// inform the user that the authentication failed and exit the program
 			
 			System.out.println( "\nUser Authentication failed.\n" );
+			System.out.println( "Please try again by restarting the application!\n" );
 			return;
 		} else {
 			
 			// inform the user that the authentication was successful
 			
 			System.out.println( "\nUser Authenticated Successfully." );
-			System.out.println( "Please try again by restarting the application!\n" );
 		}	
 
 		/////////////////////////////////////////////////////////////////////////////////

@@ -31,11 +31,13 @@ var bodyParser  = require("body-parser");     //Javascript parser utility
 var rest = require("./REST.js");              //REST services/handler module
 var app  = express();                         //express instance
 
+
 // Function definition
 function REST(){
     var self = this;
     self.connectMysql();
 };
+
 
 // Here we connect to the database. Of course you will put your own user and password information 
 // in the "user" and "password" variables. Note that we also create a connection pool.

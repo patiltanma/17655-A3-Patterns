@@ -12,6 +12,8 @@
 * Parameters: None
 *
 * Internal Methods: None
+*  String retrieveUserInfo(String username) - gets and returns the userinfo from the database
+*  String addUserInfo(String username, String password) - adds teh username and the password to the database
 *  String retrieveOrders() - gets and returns all the orders in the ord88erinfo database
 *  String retrieveOrders(String id) - gets and returns the order associated with the order id
 *  String sendPost(String Date, String FirstName, String LastName, String Address, String Phone) - creates a new 
@@ -122,6 +124,7 @@ public class WSClientAPI
 		return(response.toString());
 	}
 	
+	
 	/********************************************************************************
 	* Description: Gets and returns all the orders in the orderinfo database
 	* Parameters: None
@@ -157,6 +160,7 @@ public class WSClientAPI
 		return(response.toString());
 
 	}
+	
 	
 	/********************************************************************************
 	* Description: Gets and returns the order based on the provided id from the
@@ -195,6 +199,7 @@ public class WSClientAPI
 
 	}
 
+	
 	/********************************************************************************
 	* Description: Posts the new order to the orderinfo database
 	* Parameters: None
@@ -245,7 +250,6 @@ public class WSClientAPI
 		return(response.toString());
 		
     } // newOrder
-    
     
     
     /********************************************************************************

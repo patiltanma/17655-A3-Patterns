@@ -1,0 +1,20 @@
+
+Getting username: prachi
+Getting username: prashah
+Getting username: tapatil
+Getting username: pramacha
+Getting username: saikallu
+Adding to users table saikallu
+Getting all orders database entries...
+Adding to orders table undefined,Soham,Donwalkar,Munbau,asf21312
+15 	 Getting all orders database entries...
+15 	 Getting all orders database entries...
+2/27/2018 	 15:5:32 	 Getting all orders database entries...
+2/27/2018 	 15:7:12 	 Getting order ID: 5
+2/27/2018 	 15:7:41 	 Getting order ID: 4
+2/27/2018 	 15:7:47 	 Deleting order ID: 4
+2/27/2018 	 15:8:13 	 Adding to orders table undefined,Vaibhav,Sinha,UP,3123134
+2/27/2018 	 15:8:20 	 Getting all orders database entries...
+2/27/2018 	 15:9:15 	 Getting username: pramacha
+2/27/2018 	 15:9:19 	 Getting username: pramacha
+2/27/2018 	 15:9:22 	 Getting order ID: 2

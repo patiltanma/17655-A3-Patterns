@@ -1,19 +1,19 @@
 /******************************************************************************************************************
-* File: RetrieveServices.java
+* File: UserLoginServices.java
 * Course: 17655
 * Project: Assignment A3
 * Copyright: Copyright (c) 2018 Carnegie Mellon University
 * Versions:
 *	1.0 February 2018 - Initial write of assignment 3 (ajl).
 *
-* Description: This class provides the concrete implementation of the retrieve micro services. These services run
+* Description: This class provides the concrete implementation of the user login micro services. These services run
 * in their own process (JVM).
 *
 * Parameters: None
 *
 * Internal Methods:
-*  String retrieveOrders() - gets and returns all the orders in the orderinfo database
-*  String retrieveOrders(String id) - gets and returns the order associated with the order id
+*  String addUserInfo(String username, String password) - adds new user with his username and password to the database
+*  String retrieveUserInfo(String username) - gets and returns the user information
 *
 * External Dependencies: 
 *	- rmiregistry must be running to start this server
@@ -25,7 +25,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.*;
 
-public class RetrieveServices extends UnicastRemoteObject implements RetrieveServicesAI
+public class UserLoginServices extends UnicastRemoteObject implements UserLoginServicesAI
 { 
     // Set up the JDBC driver name and database URL
     static final String JDBC_CONNECTOR = "com.mysql.jdbc.Driver";  
@@ -36,7 +36,7 @@ public class RetrieveServices extends UnicastRemoteObject implements RetrieveSer
     static final String PASS = "2909"; //replace with your MySQL root password
 
     // Do nothing constructor
-    public RetrieveServices() throws RemoteException {}
+    public UserLoginServices() throws RemoteException {}
 
     // Main service loop
     public static void main(String args[]) 
@@ -47,35 +47,29 @@ public class RetrieveServices extends UnicastRemoteObject implements RetrieveSer
 
         try 
         { 
-            RetrieveServices obj = new RetrieveServices();
+            UserLoginServices obj = new UserLoginServices();
 
             // Bind this object instance to the name RetrieveServices in the rmiregistry 
-            Naming.rebind("//localhost:1099/RetrieveServices", obj); 
+            Naming.rebind("//localhost:1099/UserLoginServices", obj); 
 
         } catch (Exception e) {
 
-            System.out.println("RetrieveServices binding err: " + e.getMessage()); 
+            System.out.println("UserLoginServices binding err: " + e.getMessage()); 
             e.printStackTrace();
         } 
 
     } // main
+ 
+    // This method add the user information into the ms_orderinfo database
 
-
-    // Inplmentation of the abstract classes in RetrieveServicesAI happens here.
-
-    // This method will return all the entries in the orderinfo database
-
-    public String retrieveOrders() throws RemoteException
+    public String addUserInfo(String username, String password) throws RemoteException
     {
       	// Local declarations
 
-        Connection conn = null;		// connection to the orderinfo database
-        Statement stmt = null;		// A Statement object is an interface that represents a SQL statement.
-        String ReturnString = "[";	// Return string. If everything works you get an ordered pair of data
-        							// if not you get an error string
-								
-	  //System.out.println("Reched Retrive Order...");
-	  
+        Connection conn = null;		                 // connection to the orderinfo database
+        Statement stmt = null;		                 // A Statement object is an interface that represents a SQL statement.
+        String ReturnString = "User Info Added.";	     // Return string. If everything works you get an 'OK' message
+        							                 // if not you get an error string
         try
         {
             // Here we load and initialize the JDBC connector. Essentially a static class
@@ -92,43 +86,17 @@ public class RetrieveServices extends UnicastRemoteObject implements RetrieveSer
             // of the Java.rmi.* package that enables you to submit SQL queries to the database
             // that we are connected to (via JDBC in this case).
 
-            //System.out.println("Creating statement...");
             stmt = conn.createStatement();
             
-            String sql;
-            sql = "SELECT * FROM Orders";
-            ResultSet rs = stmt.executeQuery(sql);
+            String sql = "INSERT INTO USERS(username, password) VALUES (\""+username+"\",\""+password+"\")";
+		  
+		  
+            // execute the update
 
-            //Extract data from result set
+            stmt.executeUpdate(sql);
 
-            while(rs.next())
-            {
-                //Retrieve by column name
-                int id  = rs.getInt("order_id");
-                String date = rs.getString("order_date");
-                String first = rs.getString("first_name");
-                String last = rs.getString("last_name");
-                String address = rs.getString("address");
-                String phone = rs.getString("phone");
+            // clean up the environment
 
-                //Display values
-                //System.out.print("ID: " + id);
-                //System.out.print(", date: " + date);
-                //System.out.print(", first: " + first);
-                //System.out.print(", last: " + last);
-                //System.out.print(", address: " + address);
-                //System.out.println("phone:"+phone);
-
-                ReturnString = ReturnString +"{order_id:"+id+", order_date:"+date+", first_name:"+first+", last_name:"
-                               +last+", address:"+address+", phone:"+phone+"}";
-
-            }
-
-            ReturnString = ReturnString +"]";
-
-            //Clean-up environment
-
-            rs.close();
             stmt.close();
             conn.close();
             stmt.close(); 
@@ -141,12 +109,13 @@ public class RetrieveServices extends UnicastRemoteObject implements RetrieveSer
         
         return(ReturnString);
 
-    } //retrieve all orders
-
-    // This method will returns the order in the orderinfo database corresponding to the id
+    } //addUserInfo
+    
+    
+    // This method will returns the user information in the orderinfo database corresponding to the id
     // provided in the argument.
 
-    public String retrieveOrders(String orderid) throws RemoteException
+    public String retrieveUserInfo(String username) throws RemoteException
     {
       	// Local declarations
 
@@ -171,11 +140,11 @@ public class RetrieveServices extends UnicastRemoteObject implements RetrieveSer
             // of the Java.rmi.* package that enables you to submit SQL queries to the database
             // that we are connected to (via JDBC in this case).
 
-            // System.out.println("Creating statement...");
+             //System.out.println("Creating statement...");
             stmt = conn.createStatement();
             
             String sql;
-            sql = "SELECT * FROM Orders where order_id=" + orderid;
+		  sql = "SELECT * FROM Users where username='" + username + "'";
             ResultSet rs = stmt.executeQuery(sql);
 
             // Extract data from result set. Note there should only be one for this method.
@@ -185,23 +154,10 @@ public class RetrieveServices extends UnicastRemoteObject implements RetrieveSer
             while(rs.next())
             {
                 //Retrieve by column name
-                int id  = rs.getInt("order_id");
-                String date = rs.getString("order_date");
-                String first = rs.getString("first_name");
-                String last = rs.getString("last_name");
-                String address = rs.getString("address");
-                String phone = rs.getString("phone");
+                String buffer = rs.getString("username");
+                String password = rs.getString("password");
 
-                //Display values
-                //System.out.print("ID: " + id);
-                //System.out.print(", date: " + date);
-                //System.out.print(", first: " + first);
-                //System.out.print(", last: " + last);
-                //System.out.print(", address: " + address);
-                //System.out.println("phone:"+phone);
-
-                ReturnString = ReturnString +"{order_id:"+id+", order_date:"+date+", first_name:"+first+", last_name:"
-                               +last+", address:"+address+", phone:"+phone+"}";
+                ReturnString = ReturnString +"{username:"+username+", password:"+password+"}";
             }
 
             ReturnString = ReturnString +"]";
@@ -217,11 +173,12 @@ public class RetrieveServices extends UnicastRemoteObject implements RetrieveSer
         } catch(Exception e) {
 
             ReturnString = e.toString();
-
+		  
         } 
 
+	   System.out.println(ReturnString);
         return(ReturnString);
 
     } //retrieve order by id
     
-} // RetrieveServices
+} //UserLoginServices

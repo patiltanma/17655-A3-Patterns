@@ -72,9 +72,7 @@ public class DeleteServices extends UnicastRemoteObject implements DeleteService
         Statement stmt = null;		                 // A Statement object is an interface that represents a SQL statement.
         String ReturnString = "Order Deleted";	     // Return string. If everything works you get an 'OK' message
         							                 // if not you get an error string
-      
-		//System.out.println("Reached Delete Order...");
-		
+	
 	 try
         {
             // Here we load and initialize the JDBC connector. Essentially a static class
@@ -91,7 +89,6 @@ public class DeleteServices extends UnicastRemoteObject implements DeleteService
             // of the Java.rmi.* package that enables you to submit SQL queries to the database
             // that we are connected to (via JDBC in this case).
 
-		  //System.out.println("Creating statement...");
             stmt = conn.createStatement();
 	   
 		  String sql = "DELETE FROM Orders where order_id=" + orderid;
@@ -114,6 +111,6 @@ public class DeleteServices extends UnicastRemoteObject implements DeleteService
         
         return(ReturnString);
 
-    } //retrieve all orders
+    } //deleteOrder
 
-} // RetrieveServices
+} //DeleteServices

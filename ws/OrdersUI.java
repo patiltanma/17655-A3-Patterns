@@ -52,20 +52,20 @@ public class OrdersUI
 		// User Login
 		/////////////////////////////////////////////////////////////////////////////////
 		
-		System.out.println( "\n\n\n\n" );
+		System.out.println( "\n\n" );
 		System.out.println( "User Authentication\n" );
 		if(AuthenticateUser()==false)
 		{
 			// inform the user that the authentication failed and exit the program
 			
 			System.out.println( "\nUser Authentication failed.\n" );
+			System.out.println( "Please try again by restarting the application!\n" );
 			return;
 		} else {
 			
 			// inform the user that the authentication was successful
 			
 			System.out.println( "\nUser Authenticated Successfully." );
-			System.out.println( "Please try again by restarting the application!\n" );
 		}	
 
 		/////////////////////////////////////////////////////////////////////////////////
@@ -319,7 +319,7 @@ public class OrdersUI
 	*			Adds username and password if not existing. Checks if username and
 	*			password match.
 	* Parameters: None
-	* Returns: tells if authentication passed of failes.
+	* Returns: tells if authentication passed or failed.
 	********************************************************************************/
 	
 	static private boolean AuthenticateUser() 
@@ -440,9 +440,11 @@ public class OrdersUI
 				System.out.println("Username and password didnot match.");
 				return false;
 
-			}
-		}
-	}
+			} //if
+			
+		} // if
+		
+	}  //AuthenticateUser
 	
 	
 	/********************************************************************************
@@ -476,8 +478,8 @@ public class OrdersUI
 		} else {
 			
 			return true;
-		}
+		} // if
 					
-	}
+	} //isUsernamePresent
 	
 } // OrdersUI
